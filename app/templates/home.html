@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- About Section -->
+        <section class="about-section" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static 'ch.jpeg' %}') center/cover;">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Welcome to Guerra's Culinary Delights!</h2>
+                    <p>
+
+                        At Guerra's, every treat is crafted with passion, quality, and the finest ingredients. We are dedicated to bringing you desserts that do more than satisfy a craving—they create a memorable experience. With recipes perfected through training and experience, our sweets celebrate flavors that bring people together and elevate every moment. Whether you're indulging in a classic favorite or discovering a new delight, we aim to make every bite extraordinary. Join us, and experience the joy of gourmet treats that speak to the heart.</p>
+                    
+                        <div class="stat-item">
+                            <div class="stat-number">{{oredr_count}}+</div>
+                            <div class="stat-label">Cupcakes Sold</div>
+                        </div>
+                       
+                   
+                </div>
+                        </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="products">
+                {% for product in products %}
+                <div class="product-card">
+                    <a href="{% url 'product_detail' product.id%}">
+                    <img src="{{product.image.url}}" alt="Product 1" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">{{product.title}}</h3>
+                        <p class="product-description">{{product.simple_discription}}</p>
+                        <div class="product-price">${{product.price}}</div>
+                        <a href="{% url 'add_to_cart' product_id=product.id %}" class="add-to-cart">
+                            add to cart 
+                        </a>
+                    </div>
+                </a>
+                </div>
+                {% endfor %}
+                
+            </div>
+
+
+        
+            <!-- Pagination -->
+            <div class="pagination">
+                {% if products.has_previous %}
+            
+                <a class="pagination-btn " href="?page={{ product.previous_page_number       								}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+        
+                {% endif %}
+                {% for num in products.paginator.page_range %}
+              
+                <a  href="?page={{ num }}" class="pagination-btn  {% if products.number == num %}active{% endif %}">{{ num }}</a>
+                {% endfor %}
+                {% if products.has_next %}
+            
+                <a class="pagination-btn " href="?page={{ products.next_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+        
+                {% endif %}
+                
+            </div>
+        </section>
+    </div>
+
+{% endblock content %}

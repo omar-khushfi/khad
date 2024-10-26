@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Delights - {% block title %}Home{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="logo"><img src="{% static 'logo.jpeg' %}" class="logo"></div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'us' %}">About Us</a>
+           
+            <a href="#contact">Contact Us</a>
+        </div>
+        <div class="cart-icon">
+            <a href="{% url 'cart' %}">
+                <i class="fas fa-shopping-cart"></i>
+                {% with total_items=request.session.cart|length %}
+                    {% if total_items > 0 %}
+                        <div class="cart-count">{{ total_items }}</div>
+                    {% endif %}
+                {% endwith %}
+            </a>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeBtn"><i class="fas fa-times"></i></div>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'us' %}">About Us</a>
+        <a href="#contact">Contact Us</a>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="social-links">
+            <a name="contact"></a>
+            <a href="https://www.facebook.com/homebasedbakerywaukeganil/"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@guerras.culinary"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.linkedin.com/in/guerra-s-culinary-delights-llc-92405b27a/"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
+
+    <script><a href="https://www.facebook.com/homebasedbakerywaukeganil/"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/@guerras.culinary"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.linkedin.com/in/guerra-s-culinary-delights-llc-92405b27a/"><i class="fab fa-tiktok"></i></a>
+        // Toggle Sidebar
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('closeBtn');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.style.right = '0';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.style.right = '-250px';
+        });
+
+        // Auto-hide messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const messages = document.querySelector('.messages');
+                if (messages) {
+                    messages.style.display = 'none';
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

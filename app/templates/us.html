@@ -1,0 +1,316 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Guerra's Culinary Delights</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #ff69b49c; /* Light rosy color */
+            border-radius: 8px;
+            margin-bottom: 50px;
+            margin-top: 80px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #d5006d; /* A darker pink for headings */
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff; /* White background for sections */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #d5006d; /* Dark pink for subheadings */
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        :root {
+            --primary: #ff69b4;
+            --secondary: #d7358d;
+            --accent: #ff1493;
+        }
+        
+        /* Navbar */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Hide links on small screens */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cart-icon {
+            position: relative;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Sidebar Menu */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        .sidebar {
+            display: none; /* Hide the sidebar by default */
+            position: fixed;
+            top: 0;
+            right: -250px; /* Hidden off the screen */
+            width: 250px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 2rem;
+            transition: right 0.3s ease; /* Smooth transition */
+        }
+        
+        .sidebar.show {
+            display: block; /* Show sidebar when the 'show' class is added */
+            right: 0; /* Move it into view */
+        }
+        
+        .sidebar a {
+            display: block;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .sidebar a:hover {
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+            }
+        
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .about-section {
+                min-height: 350px; /* Further reduced height */
+            }
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem;
+            margin-top: auto;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color:#ff69b4;
+        }
+        .logo {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            transition: transform 0.3s;
+            width: 60px;
+            height: 50px;
+        }
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><img src="{% static 'logo.jpeg' %}" class="logo"></div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'us' %}">About Us</a>
+            <a href="#contact">Contact Us</a>
+        </div>
+        <div class="cart-icon">
+            <a href="{% url 'cart' %}">
+                <i class="fas fa-shopping-cart"></i>
+                {% with total_items=request.session.cart|length %}
+                    {% if total_items > 0 %}
+                        <div class="cart-count">{{ total_items }}</div>
+                    {% endif %}
+                {% endwith %}
+            </a>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeBtn"><i class="fas fa-times"></i></div>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#about">About Us</a>
+      
+        <a href="#contact">Contact Us</a>
+    </div>
+
+    <header>
+        <h1>About Us</h1>
+    </header>
+    
+    <main>
+        <section>
+            <h2>Who Are We?</h2>
+            <p>We are Guerra's Culinary Delights, a passionate team dedicated to creating high-quality desserts that turn moments into cherished memories.</p>
+        </section>
+        <section>
+            <h2>Our Core Values, Mission, and Vision</h2>
+            <p>Our core values are quality, passion, and connection. Our mission is to craft delicious treats that bring people together, and our vision is to become a go-to destination for gourmet desserts that inspire joy and togetherness.</p>
+        </section>
+        <section>
+            <h2>What Inspired Us to Start This Journey?</h2>
+            <p>Our journey began with a love for cake and the desire to create something meaningful. We started small, driven by a passion for sharing quality desserts with the community.</p>
+        </section>
+        <section>
+            <h2>Where Did We Begin?</h2>
+            <p>We started in a local neighborhood, where the warm reception from our community fueled our desire to grow and improve.</p>
+        </section>
+        <section>
+            <h2>Were There Any Milestones That Helped Us Grow?</h2>
+            <p>Earning a catering diploma was a pivotal moment, allowing us to elevate our offerings and provide an even better experience for our customers.</p>
+        </section>
+        <section>
+            <h2>What Makes Us Unique?</h2>
+            <p>Our dedication to quality, our deeply personal approach to each dessert, and our commitment to using the finest ingredients make every treat special. Each item is crafted with care to provide not just flavor but an experience.</p>
+        </section>
+        <section>
+            <h2>What Values Do We Prioritize in Our Work?</h2>
+            <p>We prioritize quality, creativity, and a commitment to customer satisfaction, ensuring that each dessert exceeds expectations.</p>
+        </section>
+        <section>
+            <h2>What Are We Doing Now?</h2>
+            <p>We’re creating a variety of gourmet desserts that cater to all kinds of tastes, constantly innovating to bring fresh flavors and unique experiences to our customers.</p>
+        </section>
+        <section>
+            <h2>Where Are We Headed?</h2>
+            <p>Our goal is to expand our offerings and reach more dessert lovers, becoming a beloved name for gourmet sweets.</p>
+        </section>
+        <section>
+            <h2>Why Should People Choose Us?</h2>
+            <p>People should choose Guerra's Culinary Delights for our dedication to excellence, the quality of our ingredients, and the memorable experience that comes with every dessert we create.</p>
+        </section>
+    </main>
+    <footer>
+
+        <div class="social-links">
+            <a name="contact"></a>
+            <a href="https://www.facebook.com/homebasedbakerywaukeganil/"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@guerras.culinary"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.linkedin.com/in/guerra-s-culinary-delights-llc-92405b27a/"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
+    <script>
+        // Toggle Sidebar
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('closeBtn');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show'); // Toggle the 'show' class
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('show'); // Remove the 'show' class
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

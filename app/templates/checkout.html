@@ -1,0 +1,28 @@
+<!-- checkout.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Checkout</h2>
+    {% if cart %}
+        <form method="POST" class="form-ch">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </form>
+    {% else %}
+        <p>The cart is empty</p>
+    {% endif %}
+</div>
+{% endblock %}
